@@ -1,0 +1,48 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: PhysicalSwap
+    network: mumbai
+    source:
+      address: "0xa976340947a3dE5C610dcBe95e8AAb7066AB8500"
+      abi: PhysicalSwap
+      startBlock: 23569002
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - FleatoCharge
+        - OkToDeliver
+        - OkToPayout
+        - OkToRefund
+        - Refunded
+        - PaymentScavenged
+        - FeeScavenged
+        - PaymentWithdrawn
+        - FeeWithdrawn
+      abis:
+        - name: PhysicalSwap
+          file: ./abis/PhysicalSwap.json
+      eventHandlers:
+        - event: FleatoCharge(indexed bytes32,indexed bytes32,indexed address,uint256,address,uint256,uint256)
+          handler: handleFleatoCharge
+        - event: OkToDeliver(indexed bytes32)
+          handler: handleOkToDeliver
+        - event: OkToPayout(indexed bytes32)
+          handler: handleOkToPayout
+        - event: OkToRefund(indexed bytes32)
+          handler: handleOkToRefund
+        - event: Refunded(indexed bytes32,uint256)
+          handler: handleRefunded
+        - event: PaymentScavenged(indexed bytes32,uint256)
+          handler: handlePaymentScavenged
+        - event: FeeScavenged(indexed bytes32,uint256)
+          handler: handleFeeScavenged
+        - event: PaymentWithdrawn(indexed bytes32,uint256)
+          handler: handlePaymentWithdrawn
+        - event: FeeWithdrawn(indexed bytes32,uint256)
+          handler: handleFeeWithdrawn
+      file: ./src/mapping.ts

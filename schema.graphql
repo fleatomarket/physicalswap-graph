@@ -1,0 +1,50 @@
+enum ChargeStatus {
+  UNINITIALIZED
+  SUSPENSE
+  OK_TO_DELIVER
+  OK_TO_PAYOUT
+  OK_TO_REFUND
+}
+
+type Charge @entity {
+  id: ID!
+  paymentsCount: Int
+  chargeCode: Bytes # bytes32
+  product: Product # bytes32
+  payments: [Payment!] @derivedFrom(field: "charge")
+  receiver: User
+  status: ChargeStatus
+  adjudicator: Bytes
+  created: BigInt
+  lastUpdated: BigInt
+}
+
+type Payment @entity {
+  id: ID!
+  charge: Charge
+  paymentToken: Bytes
+  paymentAmount: BigInt
+  feeAmount: BigInt
+  sender: User
+  paymentWithdrawn: Boolean
+  feeWithdrawn: Boolean
+  refunded: Boolean
+  paymentScavenged: Boolean
+  feeScavenged: Boolean
+  created: BigInt
+  lastUpdated: BigInt
+}
+
+type User @entity {
+  id: ID!
+  address: Bytes
+  receipts: [Charge!] @derivedFrom(field: "receiver")
+  spends: [Payment!] @derivedFrom(field: "sender")
+}
+
+type Product @entity {
+  id: ID!
+  productCode: Bytes
+  sales: [Charge!] @derivedFrom(field: "product") 
+}
+

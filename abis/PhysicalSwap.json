@@ -1,0 +1,542 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_scavenger",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_feeTokenContract",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "chargeCode",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "paymentCode",
+        "type": "uint256"
+      }
+    ],
+    "name": "FeeScavenged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "chargeCode",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "paymentCode",
+        "type": "uint256"
+      }
+    ],
+    "name": "FeeWithdrawn",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "chargeCode",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "productCode",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "receiver",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "paymentCode",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "paymentTokenContract",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "paymentAmount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "feeAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "FleatoCharge",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "chargeCode",
+        "type": "bytes32"
+      }
+    ],
+    "name": "OkToDeliver",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "chargeCode",
+        "type": "bytes32"
+      }
+    ],
+    "name": "OkToPayout",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "chargeCode",
+        "type": "bytes32"
+      }
+    ],
+    "name": "OkToRefund",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "chargeCode",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "paymentCode",
+        "type": "uint256"
+      }
+    ],
+    "name": "PaymentScavenged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "chargeCode",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "paymentCode",
+        "type": "uint256"
+      }
+    ],
+    "name": "PaymentWithdrawn",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "chargeCode",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "paymentCode",
+        "type": "uint256"
+      }
+    ],
+    "name": "Refunded",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_chargeCode",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getChargeStatus",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "productCode",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "receiver",
+        "type": "address"
+      },
+      {
+        "internalType": "enum PhysicalSwap.ApprovedState",
+        "name": "approvedState",
+        "type": "uint8"
+      },
+      {
+        "internalType": "address",
+        "name": "adjudicator",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "paymentsLength",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "created",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_chargeCode",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_paymentCode",
+        "type": "uint256"
+      }
+    ],
+    "name": "getPaymentStatus",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "paymentTokenContract",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "paymentAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "feeAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "paymentWithdrawn",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "feeWithdrawn",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "refunded",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "paymentScavenged",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "feeScavenged",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "created",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_chargeCode",
+        "type": "bytes32"
+      }
+    ],
+    "name": "markOkToDeliver",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_chargeCode",
+        "type": "bytes32"
+      }
+    ],
+    "name": "markOkToPayout",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_chargeCode",
+        "type": "bytes32"
+      }
+    ],
+    "name": "markOkToRefund",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "chargeCode",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "productCode",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "address",
+            "name": "receiver",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "paymentTokenContract",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "paymentAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "feeAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "adjudicator",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct PhysicalSwap.PaymentInput",
+        "name": "_input",
+        "type": "tuple"
+      }
+    ],
+    "name": "pay",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_chargeCode",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_paymentCode",
+        "type": "uint256"
+      }
+    ],
+    "name": "refund",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_chargeCode",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_paymentCode",
+        "type": "uint256"
+      }
+    ],
+    "name": "scavengeFee",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_chargeCode",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_paymentCode",
+        "type": "uint256"
+      }
+    ],
+    "name": "scavengePayment",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_chargeCode",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_paymentCode",
+        "type": "uint256"
+      }
+    ],
+    "name": "withdrawFee",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_chargeCode",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_paymentCode",
+        "type": "uint256"
+      }
+    ],
+    "name": "withdrawPayment",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_chargeCode",
+        "type": "bytes32"
+      }
+    ],
+    "name": "withdrawPaymentsAndFees",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

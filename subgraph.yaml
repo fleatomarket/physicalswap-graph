@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: PhysicalSwap
-    network: mumbai
+    network: matic
     source:
-      address: "0xa976340947a3dE5C610dcBe95e8AAb7066AB8500"
+      address: "0xbBf5725D001Be8bD802766Dd355EBf695D5b405a"
       abi: PhysicalSwap
-      startBlock: 23569002
+      startBlock: 23501048
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5

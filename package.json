@@ -4,7 +4,7 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --product hosted-service --node https://api.thegraph.com/deploy/ --deploy-key c06006a4705b4666bc88b2f18542810f fleatomarket/physical-swap",
+    "deploy": "graph deploy --product hosted-service --node https://api.thegraph.com/deploy/ fleatomarket/physical-swap",
     "create-local": "graph create --node http://localhost:8020/ fleatomarket/physicalswap",
     "remove-local": "graph remove --node http://localhost:8020/ fleatomarket/physicalswap",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 fleatomarket/physicalswap"

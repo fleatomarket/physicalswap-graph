@@ -1,19 +1,22 @@
-enum ChargeStatus {
+enum ApprovedState {
   UNINITIALIZED
   SUSPENSE
   OK_TO_DELIVER
   OK_TO_PAYOUT
   OK_TO_REFUND
+  SCAVENGING
 }
 
 type Charge @entity {
   id: ID!
-  paymentsCount: Int
+  paymentsLength: Int
   chargeCode: Bytes # bytes32
   product: Product # bytes32
   payments: [Payment!] @derivedFrom(field: "charge")
-  receiver: User
-  status: ChargeStatus
+  nft: NFT
+  buyer: User
+  seller: User
+  state: ApprovedState
   adjudicator: Bytes
   created: BigInt
   lastUpdated: BigInt
@@ -24,13 +27,27 @@ type Payment @entity {
   charge: Charge
   paymentToken: Bytes
   paymentAmount: BigInt
-  feeAmount: BigInt
+  withholdingToken: Bytes
+  withholdingAmount: BigInt
   sender: User
   paymentWithdrawn: Boolean
-  feeWithdrawn: Boolean
-  refunded: Boolean
+  withholdingWithdrawn: Boolean
   paymentScavenged: Boolean
-  feeScavenged: Boolean
+  withholdingScavenged: Boolean
+  paymentAndWithholdingRefunded: Boolean
+  created: BigInt
+  lastUpdated: BigInt
+}
+
+type NFT @entity {
+  id: ID!
+  charge: Charge
+  contract: Bytes
+  tokenId: BigInt
+  nftInCustody: Boolean
+  nftWithdrawn: Boolean
+  nftRefunded: Boolean
+  nftScavenged: Boolean
   created: BigInt
   lastUpdated: BigInt
 }
@@ -38,7 +55,7 @@ type Payment @entity {
 type User @entity {
   id: ID!
   address: Bytes
-  receipts: [Charge!] @derivedFrom(field: "receiver")
+  receipts: [Charge!] @derivedFrom(field: "seller")
   spends: [Payment!] @derivedFrom(field: "sender")
 }
 

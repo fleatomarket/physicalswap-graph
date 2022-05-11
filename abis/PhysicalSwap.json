@@ -1,21 +1,5 @@
 [
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_scavenger",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_feeTokenContract",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
     "anonymous": false,
     "inputs": [
       {
@@ -25,13 +9,25 @@
         "type": "bytes32"
       },
       {
-        "indexed": false,
+        "indexed": true,
+        "internalType": "address",
+        "name": "nftContract",
+        "type": "address"
+      },
+      {
+        "indexed": true,
         "internalType": "uint256",
-        "name": "paymentCode",
+        "name": "tokenId",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "receipient",
+        "type": "address"
       }
     ],
-    "name": "FeeScavenged",
+    "name": "NFTRefunded",
     "type": "event"
   },
   {
@@ -44,13 +40,56 @@
         "type": "bytes32"
       },
       {
-        "indexed": false,
+        "indexed": true,
+        "internalType": "address",
+        "name": "nftContract",
+        "type": "address"
+      },
+      {
+        "indexed": true,
         "internalType": "uint256",
-        "name": "paymentCode",
+        "name": "tokenId",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "receipient",
+        "type": "address"
       }
     ],
-    "name": "FeeWithdrawn",
+    "name": "NFTScavenged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "chargeCode",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "nftContract",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "receipient",
+        "type": "address"
+      }
+    ],
+    "name": "NFTWithdrawn",
     "type": "event"
   },
   {
@@ -67,39 +106,59 @@
         "internalType": "bytes32",
         "name": "productCode",
         "type": "bytes32"
+      }
+    ],
+    "name": "NewCharge",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "chargeCode",
+        "type": "bytes32"
       },
       {
         "indexed": true,
         "internalType": "address",
-        "name": "receiver",
+        "name": "nftContract",
         "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "uint256",
-        "name": "paymentCode",
+        "name": "tokenId",
         "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "address",
-        "name": "paymentTokenContract",
+        "name": "receipient",
         "type": "address"
+      }
+    ],
+    "name": "NewNFTDeposit",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "chargeCode",
+        "type": "bytes32"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "uint256",
-        "name": "paymentAmount",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "feeAmount",
+        "name": "paymentCode",
         "type": "uint256"
       }
     ],
-    "name": "FleatoCharge",
+    "name": "NewPayment",
     "type": "event"
   },
   {
@@ -157,6 +216,25 @@
         "type": "uint256"
       }
     ],
+    "name": "PaymentAndWithholdingRefunded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "chargeCode",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "paymentCode",
+        "type": "uint256"
+      }
+    ],
     "name": "PaymentScavenged",
     "type": "event"
   },
@@ -195,129 +273,127 @@
         "type": "uint256"
       }
     ],
-    "name": "Refunded",
+    "name": "WithholdingScavenged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "chargeCode",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "paymentCode",
+        "type": "uint256"
+      }
+    ],
+    "name": "WithholdingWithdrawn",
     "type": "event"
   },
   {
     "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "_chargeCode",
-        "type": "bytes32"
-      }
+      { "internalType": "bytes32", "name": "_chargeCode", "type": "bytes32" }
+    ],
+    "name": "depositNFT",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "_chargeCode", "type": "bytes32" }
     ],
     "name": "getChargeStatus",
     "outputs": [
+      { "internalType": "bytes32", "name": "productCode", "type": "bytes32" },
+      { "internalType": "address", "name": "seller", "type": "address" },
+      { "internalType": "address", "name": "buyer", "type": "address" },
       {
-        "internalType": "bytes32",
-        "name": "productCode",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "address",
-        "name": "receiver",
-        "type": "address"
-      },
-      {
-        "internalType": "enum PhysicalSwap.ApprovedState",
+        "internalType": "enum IPhysicalNFTSwap.ApprovedState",
         "name": "approvedState",
         "type": "uint8"
       },
-      {
-        "internalType": "address",
-        "name": "adjudicator",
-        "type": "address"
-      },
+      { "internalType": "address", "name": "adjudicator", "type": "address" },
       {
         "internalType": "uint256",
         "name": "paymentsLength",
         "type": "uint256"
       },
-      {
-        "internalType": "uint256",
-        "name": "created",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "created", "type": "uint256" }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "_chargeCode",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_paymentCode",
-        "type": "uint256"
-      }
+      { "internalType": "bytes32", "name": "_chargeCode", "type": "bytes32" }
+    ],
+    "name": "getNFTStatus",
+    "outputs": [
+      { "internalType": "address", "name": "nftContract", "type": "address" },
+      { "internalType": "uint256", "name": "nftTokenId", "type": "uint256" },
+      { "internalType": "bool", "name": "nftInCustody", "type": "bool" },
+      { "internalType": "bool", "name": "nftWithdrawn", "type": "bool" },
+      { "internalType": "bool", "name": "nftRefunded", "type": "bool" },
+      { "internalType": "bool", "name": "nftScavenged", "type": "bool" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "_chargeCode", "type": "bytes32" },
+      { "internalType": "uint256", "name": "_paymentCode", "type": "uint256" }
     ],
     "name": "getPaymentStatus",
     "outputs": [
-      {
-        "internalType": "address",
-        "name": "sender",
-        "type": "address"
-      },
+      { "internalType": "address", "name": "sender", "type": "address" },
       {
         "internalType": "address",
         "name": "paymentTokenContract",
         "type": "address"
       },
+      { "internalType": "uint256", "name": "paymentAmount", "type": "uint256" },
       {
-        "internalType": "uint256",
-        "name": "paymentAmount",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "withholdingTokenContract",
+        "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "feeAmount",
+        "name": "withholdingAmount",
         "type": "uint256"
       },
+      { "internalType": "bool", "name": "paymentWithdrawn", "type": "bool" },
       {
         "internalType": "bool",
-        "name": "paymentWithdrawn",
+        "name": "withholdingWithdrawn",
         "type": "bool"
       },
       {
         "internalType": "bool",
-        "name": "feeWithdrawn",
+        "name": "paymentAndWithholdingRefunded",
         "type": "bool"
       },
+      { "internalType": "bool", "name": "paymentScavenged", "type": "bool" },
       {
         "internalType": "bool",
-        "name": "refunded",
+        "name": "withholdingScavenged",
         "type": "bool"
       },
-      {
-        "internalType": "bool",
-        "name": "paymentScavenged",
-        "type": "bool"
-      },
-      {
-        "internalType": "bool",
-        "name": "feeScavenged",
-        "type": "bool"
-      },
-      {
-        "internalType": "uint256",
-        "name": "created",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "created", "type": "uint256" }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "_chargeCode",
-        "type": "bytes32"
-      }
+      { "internalType": "bytes32", "name": "_chargeCode", "type": "bytes32" }
     ],
     "name": "markOkToDeliver",
     "outputs": [],
@@ -326,11 +402,7 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "_chargeCode",
-        "type": "bytes32"
-      }
+      { "internalType": "bytes32", "name": "_chargeCode", "type": "bytes32" }
     ],
     "name": "markOkToPayout",
     "outputs": [],
@@ -339,11 +411,7 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "_chargeCode",
-        "type": "bytes32"
-      }
+      { "internalType": "bytes32", "name": "_chargeCode", "type": "bytes32" }
     ],
     "name": "markOkToRefund",
     "outputs": [],
@@ -364,11 +432,8 @@
             "name": "productCode",
             "type": "bytes32"
           },
-          {
-            "internalType": "address",
-            "name": "receiver",
-            "type": "address"
-          },
+          { "internalType": "address", "name": "seller", "type": "address" },
+          { "internalType": "address", "name": "buyer", "type": "address" },
           {
             "internalType": "address",
             "name": "paymentTokenContract",
@@ -380,17 +445,28 @@
             "type": "uint256"
           },
           {
+            "internalType": "address",
+            "name": "withholdingTokenContract",
+            "type": "address"
+          },
+          {
             "internalType": "uint256",
-            "name": "feeAmount",
+            "name": "withholdingAmount",
             "type": "uint256"
           },
           {
             "internalType": "address",
             "name": "adjudicator",
             "type": "address"
-          }
+          },
+          {
+            "internalType": "address",
+            "name": "nftContract",
+            "type": "address"
+          },
+          { "internalType": "uint256", "name": "nftTokenId", "type": "uint256" }
         ],
-        "internalType": "struct PhysicalSwap.PaymentInput",
+        "internalType": "struct IPhysicalNFTSwap.PaymentInput",
         "name": "_input",
         "type": "tuple"
       }
@@ -402,140 +478,77 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "_chargeCode",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_paymentCode",
-        "type": "uint256"
-      }
+      { "internalType": "bytes32", "name": "_chargeCode", "type": "bytes32" }
     ],
-    "name": "refund",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "name": "refundNFT",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "_chargeCode",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_paymentCode",
-        "type": "uint256"
-      }
+      { "internalType": "bytes32", "name": "_chargeCode", "type": "bytes32" },
+      { "internalType": "uint256", "name": "_paymentCode", "type": "uint256" }
     ],
-    "name": "scavengeFee",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "name": "refundPaymentAndWithholding",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "_chargeCode",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_paymentCode",
-        "type": "uint256"
-      }
+      { "internalType": "bytes32", "name": "_chargeCode", "type": "bytes32" }
     ],
-    "name": "scavengePayment",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "name": "scavengeNFT",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "_chargeCode",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_paymentCode",
-        "type": "uint256"
-      }
+      { "internalType": "bytes32", "name": "_chargeCode", "type": "bytes32" },
+      { "internalType": "uint256", "name": "_paymentCode", "type": "uint256" }
     ],
-    "name": "withdrawFee",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "name": "scavengePaymentAndWithholding",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "_chargeCode",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_paymentCode",
-        "type": "uint256"
-      }
+      { "internalType": "bytes32", "name": "_chargeCode", "type": "bytes32" }
+    ],
+    "name": "withdrawAll",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "_chargeCode", "type": "bytes32" }
+    ],
+    "name": "withdrawNFT",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "_chargeCode", "type": "bytes32" },
+      { "internalType": "uint256", "name": "_paymentCode", "type": "uint256" }
     ],
     "name": "withdrawPayment",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "_chargeCode",
-        "type": "bytes32"
-      }
+      { "internalType": "bytes32", "name": "_chargeCode", "type": "bytes32" },
+      { "internalType": "uint256", "name": "_paymentCode", "type": "uint256" }
     ],
-    "name": "withdrawPaymentsAndFees",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "name": "withdrawWithholding",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "nonpayable",
     "type": "function"
   }

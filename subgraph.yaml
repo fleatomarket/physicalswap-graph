@@ -6,43 +6,58 @@ dataSources:
     name: PhysicalSwap
     network: matic
     source:
-      address: "0xbBf5725D001Be8bD802766Dd355EBf695D5b405a"
+      address: "0x7025B8D5A3DB1D8c22f410809ba4684959dFF4Bf"
       abi: PhysicalSwap
-      startBlock: 23501048
+      startBlock: 26832780 
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
-        - FleatoCharge
+        - NFTRefunded
+        - NFTScavenged
+        - NFTWithdrawn
+        - NewCharge
+        - NewNFTDeposit
+        - NewPayment
         - OkToDeliver
         - OkToPayout
         - OkToRefund
-        - Refunded
+        - PaymentAndWithholdingRefunded
         - PaymentScavenged
-        - FeeScavenged
         - PaymentWithdrawn
-        - FeeWithdrawn
+        - WithholdingScavenged
+        - WithholdingWithdrawn
       abis:
         - name: PhysicalSwap
           file: ./abis/PhysicalSwap.json
       eventHandlers:
-        - event: FleatoCharge(indexed bytes32,indexed bytes32,indexed address,uint256,address,uint256,uint256)
-          handler: handleFleatoCharge
+        - event: NFTRefunded(indexed bytes32,indexed address,indexed uint256,address)
+          handler: handleNFTRefunded
+        - event: NFTScavenged(indexed bytes32,indexed address,indexed uint256,address)
+          handler: handleNFTScavenged
+        - event: NFTWithdrawn(indexed bytes32,indexed address,indexed uint256,address)
+          handler: handleNFTWithdrawn
+        - event: NewCharge(indexed bytes32,indexed bytes32)
+          handler: handleNewCharge
+        - event: NewNFTDeposit(indexed bytes32,indexed address,indexed uint256,address)
+          handler: handleNewNFTDeposit
+        - event: NewPayment(indexed bytes32,indexed uint256)
+          handler: handleNewPayment
         - event: OkToDeliver(indexed bytes32)
           handler: handleOkToDeliver
         - event: OkToPayout(indexed bytes32)
           handler: handleOkToPayout
         - event: OkToRefund(indexed bytes32)
           handler: handleOkToRefund
-        - event: Refunded(indexed bytes32,uint256)
-          handler: handleRefunded
+        - event: PaymentAndWithholdingRefunded(indexed bytes32,uint256)
+          handler: handlePaymentAndWithholdingRefunded
         - event: PaymentScavenged(indexed bytes32,uint256)
           handler: handlePaymentScavenged
-        - event: FeeScavenged(indexed bytes32,uint256)
-          handler: handleFeeScavenged
         - event: PaymentWithdrawn(indexed bytes32,uint256)
           handler: handlePaymentWithdrawn
-        - event: FeeWithdrawn(indexed bytes32,uint256)
-          handler: handleFeeWithdrawn
+        - event: WithholdingScavenged(indexed bytes32,uint256)
+          handler: handleWithholdingScavenged
+        - event: WithholdingWithdrawn(indexed bytes32,uint256)
+          handler: handleWithholdingWithdrawn
       file: ./src/mapping.ts

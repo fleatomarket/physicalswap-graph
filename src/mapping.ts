@@ -28,9 +28,6 @@ const ApprovedState = [
   "SCAVENGING"
 ]
 
-export function handleNFTRefunded(event: NFTRefunded): void {
-}
-
 const updateChargeStatus = (chargeCode: Bytes, address: Address, timestamp: BigInt): void => {
   let charge = new Charge(chargeCode.toHexString())
   let contract = PhysicalSwap.bind(address)
@@ -56,7 +53,7 @@ const updatePaymentStatus = (chargeCode: Bytes, paymentCode: BigInt, address: Ad
 const updateNFTStatus = (chargeCode: Bytes, address: Address, timestamp: BigInt): NFT => {
   let contract = PhysicalSwap.bind(address)
   let nftStatus = contract.getNFTStatus(chargeCode);
-  let nft = new NFT(nftStatus.value0.toHexString());
+  let nft = new NFT(chargeCode.toHexString());
   nft.contract = nftStatus.value0;
   nft.tokenId = nftStatus.value1;
   nft.nftInCustody = nftStatus.value2;
@@ -184,6 +181,10 @@ export function handleNFTScavenged(event: NFTScavenged): void {
 }
 
 export function handleNFTWithdrawn(event: NFTWithdrawn): void {
+  updateNFTStatus(event.params.chargeCode, event.address, event.block.timestamp);
+}
+
+export function handleNFTRefunded(event: NFTRefunded): void {
   updateNFTStatus(event.params.chargeCode, event.address, event.block.timestamp);
 }
 
